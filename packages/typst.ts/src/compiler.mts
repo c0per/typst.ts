@@ -285,6 +285,11 @@ export interface TypstCompiler {
    * Note: the incremental server will be freed after the function is finished.
    */
   withIncrementalServer<T>(f: (s: IncrementalServer) => Promise<T>): Promise<T>;
+
+  appendFonts(
+    userFonts: (string | Uint8Array)[],
+    fetcher?: typeof fetch,
+  ): Promise<void>;
 }
 
 const gCompilerModule = new LazyWasmModule(async (bin?: any) => {
@@ -447,6 +452,24 @@ class TypstCompilerDriver {
   renderPageToCanvas(): Promise<any> {
     throw new Error('Please use the api TypstRenderer.renderToCanvas in v0.4.0');
   }
+
+  async appendFonts(
+    userFonts: (string | Uint8Array)[],
+    fetcher: typeof fetch = fetch,
+  ) {
+    const fonts = await Promise.all(
+      userFonts.map((font) => {
+        if (font instanceof Uint8Array) {
+          return font;
+        }
+
+        return fetcher(font).then((res) => res.bytes());
+      }),
+    );
+
+    this.compiler.append_fonts(fonts);
+  }
+
 }
 
 // todo: caching inputs

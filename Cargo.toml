@@ -196,10 +196,10 @@ vergen-gitcl = { version = "1.0.1" }
 
 # tinymist's world implementation
 typst-shim = { version = "0.13.12-rc1" }
-tinymist-std = { version = "0.13.12-rc1", default-features = false }
-tinymist-task = { version = "0.13.12-rc1", default-features = false }
-tinymist-world = { version = "0.13.12-rc1", default-features = false }
-tinymist-project = { version = "0.13.12-rc1", default-features = false }
+tinymist-std = { version = "0.13.12-rc1", path = "../tinymist/crates/tinymist-std", default-features = false }
+tinymist-task = { version = "0.13.12-rc1", path = "../tinymist/crates/tinymist-task", default-features = false }
+tinymist-world = { version = "0.13.12-rc1", path = "../tinymist/crates/tinymist-world", default-features = false }
+tinymist-project = { version = "0.13.12-rc1", path = "../tinymist/crates/tinymist-project", default-features = false }
 
 # project core
 reflexo = { version = "0.5.5-rc7", path = "crates/reflexo", default-features = false }

@@ -126,7 +126,7 @@ impl TypstCompiler {
                 None,
                 access_model,
                 registry,
-                searcher.into(),
+                searcher.build(),
             ),
         })
     }
@@ -204,6 +204,22 @@ impl TypstCompiler {
     // todo: font manipulation
     // pub fn modify_font_data(&mut self, idx: usize, buffer: Uint8Array) {}
     // pub fn rebuild(&mut self) {}
+
+    /// Append fonts and update font resolver.
+    pub fn append_fonts(&mut self, fonts: Vec<Uint8Array>) {
+        let mut font_searcher = BrowserFontSearcher::new_with_resolver(&self.verse.font_resolver);
+
+        for font in fonts {
+            let buffer = Bytes::new(font.to_vec());
+
+            font_searcher.add_font_data(buffer);
+        }
+
+        self.verse.increment_revision(|verse| {
+            let fonts = font_searcher.build();
+            verse.set_fonts(Arc::new(fonts));
+        });
+    }
 
     pub fn get_loaded_fonts(&mut self) -> Vec<JsString> {
         self.verse
